@@ -19,6 +19,7 @@ private:
 
     int numberOfBombs;
     std::vector<int> bombPositions;
+    std::vector<int> playerPositions;
 
     int score;
     int positionsOpened;
@@ -27,8 +28,10 @@ private:
 public:
     explicit MineSweeper(std::string name);
     void startGame();
+    void resetGame();
 
     enum GameMode {
+        idle,
         oneBomb,
         threeBomb,
         fiveBomb,
@@ -41,6 +44,8 @@ private:
     GameMode gameMode;
     void printWelcome();
     void printInstructions();
+    void printGameDetails() const;
+
     bool setGameMode(int input);
     void placeBombs();
     bool checkPlayerPosition(int position);
@@ -49,9 +54,11 @@ private:
     void handleWin();
     bool checkPositionInput(int row, int col);
     void printGameBoard(std::string board[13][26]);
-    void updateGameBoard(bool bomb, int position);
+    void updateGameBoard(int position);
+    int calculateNumberForBoard(int position);
+    void addToBoard(std::string symbol, int position);
     void revealGameBoardWhenGameOver();
-    void printBoardPositions();
+//    void printBoardPositions();
 };
 
 

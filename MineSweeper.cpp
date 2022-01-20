@@ -7,11 +7,11 @@
 #include <utility>
 #include "MineSweeper.h"
 
-#define underline "\033[4m"
-#define removeUnderline "\033[0m"
-#define green "\x1B[32m"
-#define red "\x1B[31m"
-#define white "\x1B[97m"
+#define underline "\033[4m" // Add underline to text
+#define removeUnderline "\033[0m" // Remove underline from text
+#define green "\x1B[32m" // Make text green
+#define red "\x1B[31m" // Make text red
+#define white "\x1B[97m" // Make text white
 
 MineSweeper::MineSweeper(std::string name) :
       gameBoard{{" "," ", " ", " ", "1", " ",  "|", " ", "2", " ", "|", " ", "3", " ", "|", " ", "4", " ", "|", " ", "5", " ", "|", " ", "6", " "},
@@ -30,9 +30,10 @@ MineSweeper::MineSweeper(std::string name) :
       playerName{std::move(name)},
       gameRunning{false},
       bombPositions{},
-      numberOfBombs{},
-      gameMode{},
-      score{},
+      numberOfBombs{0},
+      gameMode{idle},
+      score{0},
+      playerPositions{},
       positionsOpened{0},
       positionsRemaining{36} {
     srand((unsigned) time(nullptr));
@@ -41,7 +42,6 @@ MineSweeper::MineSweeper(std::string name) :
 void MineSweeper::startGame() {
     printWelcome();
     printInstructions();
-//    printBoardPositions();
 
     char choice;
     std::cout << "\nReady to play? (y/n)\n>";
@@ -59,12 +59,9 @@ void MineSweeper::startGame() {
         while (gameRunning) {
             int row;
             int col;
-            std::cout << underline << "\nPositions Opened:" << removeUnderline << " " << positionsOpened
-                      << " | " << underline << "Positions Remaining:" << removeUnderline << " " << positionsRemaining
-                      << " | " << underline << "Number of Bombs:" << removeUnderline << " " << numberOfBombs
-                      << " | " << underline << "Score:" << removeUnderline << " " << score <<
-                         "\n\nEnter the position you want to reveal.\n"
-                         "Make sure to enter in the format - [Row] [Space] [Column]\n>";
+            printGameDetails();
+            std::cout <<"\n\nEnter the position you want to reveal.\n"
+                            "Make sure to enter in the format - [Row] [Space] [Column]\n>";
             std::cin >> row >> col;
 
             while (!std::cin || !checkPositionInput(row, col)) {
@@ -192,6 +189,7 @@ void MineSweeper::placeBombs() {
  * @param board The game board.
  */
 void MineSweeper::printGameBoard(std::string board[13][26]) {
+//    std::cout << "====================================================\n\n";
     for (int i = 0; i < 13; i++) {
         for (int j = 0; j < 26; j++) {
             std::cout << board[i][j];
@@ -201,24 +199,28 @@ void MineSweeper::printGameBoard(std::string board[13][26]) {
 }
 
 /**
- * This function updates the position chosen by the player on the game board after each move.
- * @param bomb Whether the position contains a bomb or not.
+ * This function updates the players chosen position on the game board.
+ * The position is added to the playerPositions vector to be stored.
  * @param position The position to be updated.
  */
-void MineSweeper::updateGameBoard(bool bomb, int position) {
-    std::string symbol;
-    if (bomb)
-        symbol = "\x1B[31mX\x1B[97m";
-    else {
-        int randomNum = (rand() % 9) + 1;
-        symbol = std::to_string(randomNum);
-        symbol = "\x1B[32m" + symbol + "\x1B[97m";
+void MineSweeper::updateGameBoard(int position) {
+    std::string number = std::to_string(calculateNumberForBoard(position)); // Value will temporarily always be 1
+    number = "\x1B[32m" + number + "\x1B[97m";
 
-        positionsRemaining--;
-        positionsOpened++;
-        score += randomNum; // Temporary score value
-    }
+    playerPositions.push_back(position);
+    positionsRemaining--;
+    positionsOpened++;
 
+    addToBoard(number, position);
+    printGameBoard(gameBoard);
+}
+
+/**
+ * This function is used to add the symbol passed is as a parameter to the position that is passed as a parameter to the game board.
+ * @param symbol The symbol to add (X/1-9/blockCharacter).
+ * @param position The position to add the symbol to.
+ */
+void MineSweeper::addToBoard(std::string symbol, int position) {
     switch (position) {
         case 1:
             gameBoard[2][4] = symbol;
@@ -328,12 +330,30 @@ void MineSweeper::updateGameBoard(bool bomb, int position) {
         case 36:
             gameBoard[12][24] = symbol;
             break;
+        default:
+            break;
     }
-    printGameBoard(gameBoard);
 }
 
-void MineSweeper::revealGameBoardWhenGameOver() {
+int MineSweeper::calculateNumberForBoard(int position) {
+    int bombsTouchingPosition{};
 
+    for (int i = 1; i <= 36; i++) {
+
+    }
+    return bombsTouchingPosition;
+}
+
+/**
+ * This function is used to reveal all of the bombs on the game board after the player has either won or lost the game.
+ */
+void MineSweeper::revealGameBoardWhenGameOver() {
+    std::string bomb{"\x1B[91mX\x1B[97m"};
+
+    for (int position : bombPositions)
+        addToBoard(bomb, position);
+
+    printGameBoard(gameBoard);
 }
 
 /**
@@ -432,16 +452,17 @@ void MineSweeper::handlePlayerMove(int row, int col) {
 
     // If the position the player picked does not have a bomb
     if (!checkPlayerPosition(positionToCheck)) {
-        updateGameBoard(false, positionToCheck);
+        updateGameBoard(positionToCheck);
 
         // Checking if the player has won
         if (positionsOpened == (36 - numberOfBombs))
             handleWin();
     }
-    // If the position the player picked does have a bomb
+    // If the position the player picked does have a bomb => Game Over
     else {
-        updateGameBoard(true, positionToCheck);
+        revealGameBoardWhenGameOver();
         std::cout << "\nHard luck you've just exploded! Game Over!" << std::endl;
+        std::cout << "Score: " << score << std::endl;
         this->gameRunning = false;
     }
 }
@@ -451,7 +472,23 @@ void MineSweeper::handlePlayerMove(int row, int col) {
  */
 void MineSweeper::handleWin() {
     std::cout << green << "\nCongratulations You Win " << playerName << "!!!" << white << std::endl;
+    std::cout << "Score: " << score << std::endl;
+    revealGameBoardWhenGameOver();
     this->gameRunning = false;
+}
+
+/**
+ * This function is used to reset the game if the player would like to play again.
+ */
+void MineSweeper::resetGame() {
+    for (int i = 1; i <= 36; i++) {
+        addToBoard(blockCharacter, i);
+    }
+    playerPositions.clear();
+    bombPositions.clear();
+    gameMode = idle;
+
+    startGame();
 }
 
 /**
@@ -478,8 +515,19 @@ void MineSweeper::printInstructions() {
     std::cout <<"- When you reveal a position, you will see either an \"" << red << "X" << white << "\", which indicates a bomb, or a number from 1 -> 9, depending on whether \n"
                 "  there was a bomb in that position or not." << std::endl;
     std::cout << "- If you reveal a bomb (" << red << "X" << white "), the game is over!\n" << std::endl;
-    printGameBoard(gameBoard);
 
+    printGameBoard(gameBoard);
+}
+
+/**
+ * This function prints out all the current games details such as the positions opened, the positions remaining, the number of bombs
+ * and the players current score.
+ */
+void MineSweeper::printGameDetails() const {
+    std::cout << underline << "\nPositions Opened:" << removeUnderline << " " << positionsOpened
+              << " | " << underline << "Positions Remaining:" << removeUnderline << " " << positionsRemaining
+              << " | " << underline << "Number of Bombs:" << removeUnderline << " " << numberOfBombs
+              << " | " << underline << "Score:" << removeUnderline << " " << score;
 }
 
 

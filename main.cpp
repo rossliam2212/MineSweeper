@@ -11,11 +11,25 @@ int main() {
     MineSweeper game{name};
     game.startGame();
 
-//    int test[] {1, 2, 3};
-//    int test1[] {6, 7, 8};
-//
-//    memset(test, 0, sizeof (test));
-//    test = test1;
+    bool quit{false};
+    char playAgain;
+
+    while (!quit) {
+        std::cout << "\nWould you like to player again " << name << "? (y/n)\n>";
+        std::cin >> playAgain;
+
+        while (playAgain != 'y' && playAgain != 'n') {
+            std::cout << "\nInvalid Choice! Try again! (y/n) \n>";
+            std::cin >> playAgain;
+        }
+
+        if (playAgain == 'y') {
+            game.resetGame();
+        } else {
+            std::cout << "\nThanks for playing " << name << "!" << std::endl;
+            quit = true;
+        }
+    }
 
     return 0;
 }
