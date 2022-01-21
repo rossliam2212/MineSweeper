@@ -15,7 +15,7 @@ int main() {
     char playAgain;
 
     while (!quit) {
-        std::cout << "\nWould you like to player again " << name << "? (y/n)\n>";
+        std::cout << "\nWould you like to play again " << name << "? (y/n)\n>";
         std::cin >> playAgain;
 
         while (playAgain != 'y' && playAgain != 'n') {

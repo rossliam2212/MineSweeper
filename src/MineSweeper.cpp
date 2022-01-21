@@ -3,7 +3,6 @@
 //
 
 #include <iostream>
-#include <ctime>
 #include <utility>
 #include "MineSweeper.h"
 
@@ -18,8 +17,8 @@ MineSweeper::MineSweeper(std::string name) :
       gameRunning{false},
       board{},
       gameMode{idle},
-      score{0} {
-    srand((unsigned) time(nullptr));
+      score{0},
+      winTracker{name} {
 }
 
 void MineSweeper::startGame() {
@@ -36,8 +35,7 @@ void MineSweeper::startGame() {
 
     if (choice == 'y') {
         gameRunning = true;
-        std::cout << underline << green << "\n=== Game Started ===\n" << white << removeUnderline <<  std::endl;
-//        printGameBoard(gameBoard);
+        std::cout << underline << green << "\n=== Game Started. Good Luck! ===\n" << white << removeUnderline <<  std::endl;
         board.printGameBoard();
 
         while (gameRunning) {
@@ -79,13 +77,43 @@ bool MineSweeper::checkPositionInput(int row, int col) {
  */
 void MineSweeper::printWelcome() {
     std::cout << green << "\n===== Welcome to Mine Sweeper " << playerName << " =====" << white << std::endl;
+
+    int option{};
+
+    while (option != 1) {
+        std::cout << "\nWhat would you like to do?" << std::endl;
+        std::cout << "\t1 - Play Mine Sweeper" <<
+                     "\n\t2 - View previous game wins" << std::endl;
+        std::cin >> option;
+
+        while (!std::cin && option < 1 && option > 2) {
+            std::cout << "Sorry that's not an option! Try again! \n>";
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::cin >> option;
+        }
+
+        switch (option) {
+            case 1:
+                handleGameMode();
+                break;
+            case 2:
+                winTracker.printAllWins();
+                break;
+            default:
+                break;
+        }
+    }
+}
+
+void MineSweeper::handleGameMode() {
     std::cout << "\nHere are the game modes:\n" <<
-                 "\t- One Bomb\n" <<
-                 "\t- Three Bombs\n" <<
-                 "\t- Five Bombs\n" <<
-                 "\t- Ten Bombs\n" <<
-                 "\t- Twenty Bombs\n" <<
-                 "\t- Thirty Five Bombs\n";
+              "\t- One Bomb\n" <<
+              "\t- Three Bombs\n" <<
+              "\t- Five Bombs\n" <<
+              "\t- Ten Bombs\n" <<
+              "\t- Twenty Bombs\n" <<
+              "\t- Thirty Five Bombs\n";
 
     std::cout << "\nWhich would you like to play? (1/3/5/10/20/35)\n>";
     int decision;
@@ -137,7 +165,6 @@ bool MineSweeper::setGameMode(int input) {
         default:
             return false;
     }
-//    placeBombs();
     board.placeBombsOnBoard();
     return true;
 }
@@ -160,11 +187,17 @@ void MineSweeper::setPlayerPosition(int position) {
 }
 
 int MineSweeper::calculateNumberForBoard(int position) {
-//    int bombsTouchingPosition{};
-//
-//    for (int i = 1; i <= 36; i++) {
-//    }
-//    return bombsTouchingPosition;
+    int bombsTouchingPosition{};
+    std::vector<int> positionsToCheck = board.getPositionSurroundings().at(position-1);
+
+    for (int i = 0; i < board.getBombPositions().size(); i++) {
+        for (int j = 0; j < positionsToCheck.size(); j++) {
+            if (board.getBombPositions().at(i) == positionsToCheck.at(j))
+                bombsTouchingPosition++;
+        }
+    }
+    std::cout << "\nBombs Touching position: " << bombsTouchingPosition << "\n" << std::endl;
+    return bombsTouchingPosition;
 
     return 1; // Temporarily return 1
 }
@@ -273,7 +306,6 @@ void MineSweeper::handlePlayerMove(int row, int col) {
     }
     // If the position the player picked does have a bomb => Game Over
     else {
-//        revealGameBoardWhenGameOver();
         board.revealBoardWhenGameOver();
         std::cout << red <<  "\nHard luck " << playerName << "you've just exploded! Game Over!" << white << std::endl;
         std::cout << "Score: " << score << std::endl;
@@ -287,9 +319,36 @@ void MineSweeper::handlePlayerMove(int row, int col) {
 void MineSweeper::handleWin() {
     std::cout << green << "\nCongratulations You Win " << playerName << "!!!" << white << std::endl;
     std::cout << "Score: " << score << std::endl;
-//    revealGameBoardWhenGameOver();
+
+    std::cout << "\nHere were the bomb positions:" << std::endl;
     board.revealBoardWhenGameOver();
+    updatePlayerWins();
     this->gameRunning = false;
+}
+
+void MineSweeper::updatePlayerWins() {
+    switch (gameMode) {
+        case oneBomb:
+            winTracker.updateOneBombWins();
+            break;
+        case threeBomb:
+            winTracker.updateThreeBombWins();
+            break;
+        case fiveBomb:
+            winTracker.updateFiveBombWins();
+            break;
+        case tenBomb:
+            winTracker.updateTenBombWins();
+            break;
+        case twentyBomb:
+            winTracker.updateTwentyBombWins();
+            break;
+        case thirtyFiveBomb:
+            winTracker.updateThirtyFiveBombWins();
+            break;
+        case idle:
+            break;
+    }
 }
 
 /**
@@ -315,7 +374,6 @@ void MineSweeper::printInstructions() {
                 "  there was a bomb in that position or not." << std::endl;
     std::cout << "- If you reveal a bomb (" << red << "X" << white "), the game is over!\n" << std::endl;
 
-//    printGameBoard(gameBoard);
     board.printGameBoard();
 }
 

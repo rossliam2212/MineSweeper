@@ -7,8 +7,8 @@
 
 #include <string>
 #include <vector>
-
 #include "GameBoard.h"
+#include "WinTracker.h"
 
 class MineSweeper {
 private:
@@ -17,6 +17,8 @@ private:
     std::string blockCharacter = "\u2588";
     GameBoard board;
     int score;
+
+    WinTracker winTracker;
 
 public:
     explicit MineSweeper(std::string name);
@@ -39,19 +41,17 @@ private:
     void printInstructions();
     void printGameDetails() const;
 
+    void handleGameMode();
     bool setGameMode(int input);
+
     void handlePlayerMove(int row, int col);
     void handleWin();
     bool checkPositionInput(int row, int col);
     int calculateNumberForBoard(int position);
     void setPlayerPosition(int position);
 
+    void updatePlayerWins();
 
-//    bool checkPlayerPosition(int position);
-//    void addToBoard(std::string symbol, int position);
-//    void printGameBoard(std::string board[13][26]);
-//    void placeBombs();
-//    void revealGameBoardWhenGameOver();
 };
 
 

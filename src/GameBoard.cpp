@@ -54,6 +54,14 @@ void GameBoard::placeBombsOnBoard() {
 
         bombPositions.push_back(randomPosition);
     }
+
+    // ---- For testing
+    for(int i = 1; i <= 36; i++) {
+        if (std::find(bombPositions.begin(), bombPositions.end(), i) != bombPositions.end()) {
+            continue;
+        }
+        std::cout << "======= " << i << std::endl;
+    }
  }
 
 void GameBoard::revealBoardWhenGameOver() {
@@ -194,22 +202,45 @@ void GameBoard::updatePlayerPositions(int position) {
     playerPositions.push_back(position);
 }
 
+std::vector<int> GameBoard::getBombPositions() const {
+    return bombPositions;
+}
+
+std::vector<std::vector<int>> GameBoard::getPositionSurroundings() const {
+    return positionSurroundings;
+}
+
+/**
+ * @return The number of bombs.
+ */
 int GameBoard::getNumberOfBombs() const {
     return numberOfBombs;
 }
 
+/**
+ * @return The number of positions remaining on the board.
+ */
 int GameBoard::getPositionsRemaining() const {
     return positionsRemaining;
 }
 
+/**
+ * @return The number of positions opened by the player.
+ */
 int GameBoard::getPositionsOpened() const {
     return positionsOpened;
 }
 
+/**
+ * Decrements the positions remaining after each move by the player.
+ */
 void GameBoard::updatePositionsRemaining() {
     positionsRemaining--;
 }
 
+/**
+ * Increments the positions after each move by the player.
+ */
 void GameBoard::updatePositionsOpened() {
     positionsOpened++;
 }
