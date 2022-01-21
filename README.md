@@ -1,7 +1,9 @@
 # Simple Mine Sweeper Console Game
 
 ### Sample Game:
-##### Note: There is color while playing in the console to make things easier to read.
+#### Note: 
+- There is color while playing in the console to make things easier to read.
+- If the unicode characters/colors don't show correctly in the console, try changing how the file is being encoded in your editor.
 
 ```
 Enter your name: 
