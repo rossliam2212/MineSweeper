@@ -8,22 +8,15 @@
 #include <string>
 #include <vector>
 
+#include "GameBoard.h"
+
 class MineSweeper {
 private:
     bool gameRunning;
-
     std::string playerName;
-
     std::string blockCharacter = "\u2588";
-    std::string gameBoard[13][26];
-
-    int numberOfBombs;
-    std::vector<int> bombPositions;
-    std::vector<int> playerPositions;
-
+    GameBoard board;
     int score;
-    int positionsOpened;
-    int positionsRemaining;
 
 public:
     explicit MineSweeper(std::string name);
@@ -47,18 +40,18 @@ private:
     void printGameDetails() const;
 
     bool setGameMode(int input);
-    void placeBombs();
-    bool checkPlayerPosition(int position);
     void handlePlayerMove(int row, int col);
-//    void checkWin();
     void handleWin();
     bool checkPositionInput(int row, int col);
-    void printGameBoard(std::string board[13][26]);
-    void updateGameBoard(int position);
     int calculateNumberForBoard(int position);
-    void addToBoard(std::string symbol, int position);
-    void revealGameBoardWhenGameOver();
-//    void printBoardPositions();
+    void setPlayerPosition(int position);
+
+
+//    bool checkPlayerPosition(int position);
+//    void addToBoard(std::string symbol, int position);
+//    void printGameBoard(std::string board[13][26]);
+//    void placeBombs();
+//    void revealGameBoardWhenGameOver();
 };
 
 
