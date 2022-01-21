@@ -3,4 +3,4 @@ project(MineSweeper)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(MineSweeper main.cpp MineSweeper.cpp MineSweeper.h WinTracker.cpp WinTracker.h GameBoard.cpp GameBoard.h)
+add_executable(MineSweeper src/main.cpp src/MineSweeper.cpp src/MineSweeper.h WinTracker.cpp WinTracker.h src/GameBoard.cpp src/GameBoard.h)
