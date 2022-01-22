@@ -29,15 +29,6 @@ public:
     void updateTenBombWins();
     void updateTwentyBombWins();
     void updateThirtyFiveBombWins();
-
-    // Getter functions
-    int getOneBombWins() const;
-    int getThreeBombWins() const;
-    int getFiveBombWins() const;
-    int getTenBombWins() const;
-    int getTwentyBombWins() const;
-    int getThirtyFiveBombWins() const;
-
 };
 
 

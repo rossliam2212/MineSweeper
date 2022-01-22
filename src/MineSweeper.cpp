@@ -28,7 +28,7 @@ void MineSweeper::startGame() {
     char choice;
     std::cout << "\nReady to play? (y/n)\n>";
     std::cin >> choice;
-    while(choice != 'y' && choice != 'n') {
+    while(tolower(choice) != 'y' && tolower(choice) != 'n') {
         std::cout << "\nInvalid option. Try again. (y/n)\n>";
         std::cin >> choice;
     }
@@ -107,13 +107,13 @@ void MineSweeper::printWelcome() {
 }
 
 void MineSweeper::handleGameMode() {
-    std::cout << "\nHere are the game modes:\n" <<
-              "\t- One Bomb\n" <<
-              "\t- Three Bombs\n" <<
-              "\t- Five Bombs\n" <<
-              "\t- Ten Bombs\n" <<
-              "\t- Twenty Bombs\n" <<
-              "\t- Thirty Five Bombs\n";
+    std::cout << "\nHere are the game modes:\n"
+              << green << "\t-" << white <<" One Bomb\n"
+              << green << "\t-" << white << " Three Bombs\n"
+              << green << "\t-" << white << " Five Bombs\n"
+              << green << "\t-" << white << " Ten Bombs\n"
+              << green << "\t-" << white << " Twenty Bombs\n"
+              << green << "\t-" << white << " Thirty Five Bombs\n";
 
     std::cout << "\nWhich would you like to play? (1/3/5/10/20/35)\n>";
     int decision;
@@ -165,6 +165,7 @@ bool MineSweeper::setGameMode(int input) {
         default:
             return false;
     }
+//    std::cout << "\nNumber of Bombs: " << board.getNumberOfBombs() << std::endl;
     board.placeBombsOnBoard();
     return true;
 }
@@ -196,7 +197,7 @@ int MineSweeper::calculateNumberForBoard(int position) {
                 bombsTouchingPosition++;
         }
     }
-    std::cout << "\nBombs Touching position: " << bombsTouchingPosition << "\n" << std::endl;
+//    std::cout << "\nBombs Touching position: " << bombsTouchingPosition << "\n" << std::endl;
     return bombsTouchingPosition;
 
     return 1; // Temporarily return 1
@@ -307,7 +308,7 @@ void MineSweeper::handlePlayerMove(int row, int col) {
     // If the position the player picked does have a bomb => Game Over
     else {
         board.revealBoardWhenGameOver();
-        std::cout << red <<  "\nHard luck " << playerName << "you've just exploded! Game Over!" << white << std::endl;
+        std::cout << red <<  "\nHard luck " << playerName << " you've just exploded! Game Over!" << white << std::endl;
         std::cout << "Score: " << score << std::endl;
         this->gameRunning = false;
     }
@@ -365,14 +366,18 @@ void MineSweeper::resetGame() {
  */
 void MineSweeper::printInstructions() {
     std::cout << underline << green << "\n=== Game Instructions ===" << white << removeUnderline << std::endl;
-    std::cout << "- When you select the game mode, the bombs will be added to the board and it will be displayed like below." << std::endl;
-    std::cout << "- When the game starts, each position will contains a \"" << blockCharacter << "\", which indicates an unopened position." << std::endl;
-    std::cout << "- You will then be asked to enter the position you would like to reveal. To enter a position, you have to enter the row number \n"
+    std::cout << green << "-" << white " When you select the game mode, the bombs will be added to the board and it will be displayed like below." << std::endl;
+    std::cout << green << "-" << white " When the game starts, each position will contains a \"" << blockCharacter << "\", which indicates an unopened position." << std::endl;
+    std::cout << green << "-" << white " You will then be asked to enter the position you would like to reveal. To enter a position, you have to enter the row number \n"
                  "  followed by a space, followed by the column number." << std::endl;
-    std::cout << "- For example, to reveal the very first position on the board, which is the first row and the first column, you would enter: 1 1." << std::endl;
-    std::cout <<"- When you reveal a position, you will see either an \"" << red << "X" << white << "\", which indicates a bomb, or a number from 1 -> 9, depending on whether \n"
+    std::cout << green << "-" << white " For example, to reveal the very first position on the board, which is the first row and the first column, you would enter: 1 1." << std::endl;
+    std::cout << green << "-" << white " When you reveal a position, you will see either an \"" << red << "X" << white << "\", which indicates a bomb, or a number from " << green << "1 -> 8" << white << " , depending on whether \n"
                 "  there was a bomb in that position or not." << std::endl;
-    std::cout << "- If you reveal a bomb (" << red << "X" << white "), the game is over!\n" << std::endl;
+    std::cout << green << "-" << white " If the position you reveal contains a number, these means that there are that many bombs touching that position. For example, \n"
+                 "  if you reveal a 3, this tells you that there are currently 3 bombs touching that position and can be anywhere in the eight \n"
+                 "  positions (three if it's a corner, five if it's a side, eight otherwise) around the position you opened." << std::endl;
+    std::cout << green << "-" << white " You must use the numbers you reveal to your advantage to navigate your way around the board." << std::endl;
+    std::cout << green << "-" << white " If you reveal a bomb (" << red << "X" << white "), the game is over!\n" << std::endl;
 
     board.printGameBoard();
 }

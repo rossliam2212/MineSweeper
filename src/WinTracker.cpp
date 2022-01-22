@@ -15,6 +15,9 @@ WinTracker::WinTracker(std::string playerName) :
     thirtyFiveBombWins{0} {
 }
 
+/**
+ * This function prints out a table that shows the player all of their wins in each game mode.
+ */
 void WinTracker::printAllWins() {
     std::cout << "\n-----------------------------" << std::endl;
     std::cout << "| Game Mode" << std::setw(12) << " |  " << "Wins |" << std::endl;
@@ -30,7 +33,7 @@ void WinTracker::printAllWins() {
     std::cout << "-----------------------------" << std::endl;
 }
 
-
+// Functions to the wins on each game mode.
 void WinTracker::updateOneBombWins() { oneBombWins++; }
 void WinTracker::updateThreeBombWins() { threeBombWins++; }
 void WinTracker::updateFiveBombWins() { fiveBombWins++; }
@@ -38,9 +41,3 @@ void WinTracker::updateTenBombWins() { tenBombWins++; }
 void WinTracker::updateTwentyBombWins() { twentyBombWins++; }
 void WinTracker::updateThirtyFiveBombWins() {thirtyFiveBombWins++; }
 
-int WinTracker::getOneBombWins() const { return oneBombWins; }
-int WinTracker::getThreeBombWins() const { return threeBombWins; }
-int WinTracker::getFiveBombWins() const { return fiveBombWins; }
-int WinTracker::getTenBombWins() const { return tenBombWins; }
-int WinTracker::getTwentyBombWins() const { return twentyBombWins; }
-int WinTracker::getThirtyFiveBombWins() const {return thirtyFiveBombWins; }

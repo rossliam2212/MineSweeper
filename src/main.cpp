@@ -18,7 +18,7 @@ int main() {
         std::cout << "\nWould you like to play again " << name << "? (y/n)\n>";
         std::cin >> playAgain;
 
-        while (playAgain != 'y' && playAgain != 'n') {
+        while (tolower(playAgain) != 'y' && tolower(playAgain) != 'n') {
             std::cout << "\nInvalid Choice! Try again! (y/n) \n>";
             std::cin >> playAgain;
         }

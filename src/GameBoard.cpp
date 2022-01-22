@@ -27,6 +27,9 @@ GameBoard::GameBoard() :
     srand((unsigned) time(nullptr));
 }
 
+/**
+ * This function prints the game board.
+ */
 void GameBoard::printGameBoard() {
     for (int i = 0; i < 13; i++) {
         for (int j = 0; j < 26; j++) {
@@ -36,15 +39,21 @@ void GameBoard::printGameBoard() {
     }
 }
 
+/**
+ * This function resets the game board with the block character, if the player chooses to play again.
+ * The playerPositions vector and the bombPositions vector are also cleared to be ready for the next game.
+ */
 void GameBoard::resetGameBoard() {
     for (int i = 1; i <= 36; i++)
         addToBoard(blockCharacter, i);
 
     playerPositions.clear();
     bombPositions.clear();
-
 }
 
+/**
+ * This function randomly chooses the positions for the bombs on the board and stores them in the bombPositions vector.
+ */
 void GameBoard::placeBombsOnBoard() {
     for (int i = 0; i < numberOfBombs; i++) {
         int randomPosition = (rand() % 36) + 1;
@@ -64,6 +73,10 @@ void GameBoard::placeBombsOnBoard() {
     }
  }
 
+ /**
+  * This function is called when the player wins and loses the game.
+  * All of the positions on the board that contain bombs are set and a new board is printed to show the player all of the bomb positions.
+  */
 void GameBoard::revealBoardWhenGameOver() {
     std::string bomb{"\x1B[91mX\x1B[97m"};
 
@@ -73,6 +86,11 @@ void GameBoard::revealBoardWhenGameOver() {
     printGameBoard();
 }
 
+/**
+ * This function sets the position passed in to the symbol that is passed in.
+ * @param symbol The symbol to be added.
+ * @param position The position to place the symbol in.
+ */
 void GameBoard::addToBoard(const std::string& symbol, int position) {
     switch (position) {
         case 1:
@@ -188,24 +206,43 @@ void GameBoard::addToBoard(const std::string& symbol, int position) {
     }
 }
 
+/**
+ * This function checks if the position that the player wants to reveals contains a bomb or not.
+ * @param position The position to check.
+ * @return True if there is a bomb in that position, False otherwise.
+ */
 bool GameBoard::checkPlayerPositions(int position) {
     if (std::find(bombPositions.begin(), bombPositions.end(), position) != bombPositions.end())
         return true;
     return false;
 }
 
+/**
+ * Sets the number of bombs for the game.
+ * @param amount The amount of bombs.
+ */
 void GameBoard::setNumberOfBombs(int amount) {
     numberOfBombs = amount;
 }
 
+/**
+ * Updates the player positions vector with the newest position revealed..
+ * @param position The position to add.
+ */
 void GameBoard::updatePlayerPositions(int position) {
     playerPositions.push_back(position);
 }
 
+/**
+ * @return The bomb positions.
+ */
 std::vector<int> GameBoard::getBombPositions() const {
     return bombPositions;
 }
 
+/**
+ * @return The vector that holds each positions surroundings.
+ */
 std::vector<std::vector<int>> GameBoard::getPositionSurroundings() const {
     return positionSurroundings;
 }
