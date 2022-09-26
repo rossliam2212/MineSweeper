@@ -6,7 +6,7 @@
 #include <iomanip>
 #include "WinTracker.h"
 
-WinTracker::WinTracker(std::string playerName) :
+WinTracker::WinTracker() :
     oneBombWins{0},
     threeBombWins{0},
     fiveBombWins{0},
@@ -18,7 +18,7 @@ WinTracker::WinTracker(std::string playerName) :
 /**
  * This function prints out a table that shows the player all of their wins in each game mode.
  */
-void WinTracker::printAllWins() {
+void WinTracker::printAllWins() const {
     std::cout << "\n-----------------------------" << std::endl;
     std::cout << "| Game Mode" << std::setw(12) << " |  " << "Wins |" << std::endl;
     std::cout << "--------------------+--------" << std::endl;

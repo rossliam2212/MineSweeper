@@ -21,7 +21,7 @@ private:
     WinTracker winTracker;
 
 public:
-    explicit MineSweeper(std::string name);
+    explicit MineSweeper(const std::string &name);
     void startGame();
     void resetGame();
 
@@ -46,7 +46,7 @@ private:
 
     void handlePlayerMove(int row, int col);
     void handleWin();
-    bool checkPositionInput(int row, int col);
+    static bool checkPositionInput(int row, int col);
     int calculateNumberForBoard(int position);
     void setPlayerPosition(int position);
 

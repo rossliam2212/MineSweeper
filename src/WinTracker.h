@@ -9,8 +9,6 @@
 
 class WinTracker {
 private:
-    std::string playerName; // -- Player name variable may not be needed
-
     int oneBombWins;
     int threeBombWins;
     int fiveBombWins;
@@ -19,8 +17,8 @@ private:
     int thirtyFiveBombWins;
 
 public:
-    explicit WinTracker(std::string playerName);
-    void printAllWins();
+    WinTracker();
+    void printAllWins() const;
 
     // Update functions
     void updateOneBombWins();

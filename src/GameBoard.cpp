@@ -32,9 +32,8 @@ GameBoard::GameBoard() :
  */
 void GameBoard::printGameBoard() {
     for (int i = 0; i < 13; i++) {
-        for (int j = 0; j < 26; j++) {
+        for (int j = 0; j < 26; j++)
             std::cout << board[i][j];
-        }
         std::cout << '\n';
     }
 }
@@ -64,12 +63,23 @@ void GameBoard::placeBombsOnBoard() {
         bombPositions.push_back(randomPosition);
     }
 
-    // ---- For testing
+    // ---- For testing ----
     for(int i = 1; i <= 36; i++) {
         if (std::find(bombPositions.begin(), bombPositions.end(), i) != bombPositions.end()) {
-            continue;
+
+            if (i >= 1 && i <= 6)
+                std::cout << "===== Bomb @ 1 " << i << "\n";
+            else if (i >= 7 && i <= 12)
+                std::cout << "===== Bomb @ 2 " << (i - 6) << "\n";
+            else if (i >= 13 && i <= 18)
+                std::cout << "===== Bomb @ 3 " << (i - 12) << "\n";
+            else if (i >= 19 && i <= 24)
+                std::cout << "===== Bomb @ 4 " << (i - 18) << "\n";
+            else if (i >= 25 && i <= 30)
+                std::cout << "===== Bomb @ 5 " << (i - 24) << "\n";
+            else if (i >= 31 && i <= 36)
+                std::cout << "===== Bomb @ 6 " << (i - 30) << "\n";
         }
-        std::cout << "======= " << i << std::endl;
     }
  }
 
@@ -80,7 +90,7 @@ void GameBoard::placeBombsOnBoard() {
 void GameBoard::revealBoardWhenGameOver() {
     std::string bomb{"\x1B[91mX\x1B[97m"};
 
-    for (int position : bombPositions)
+    for (auto position : bombPositions)
         addToBoard(bomb, position);
 
     printGameBoard();

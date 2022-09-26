@@ -12,13 +12,23 @@
 #define red "\x1B[31m" // Make text red
 #define white "\x1B[97m" // Make text white
 
-MineSweeper::MineSweeper(std::string name) :
-      playerName{std::move(name)},
-      gameRunning{false},
-      board{},
-      gameMode{idle},
-      score{0},
-      winTracker{name} {
+//MineSweeper::MineSweeper(std::string name) :
+//      playerName{std::move(name)},
+//      gameRunning{false},
+//      board{},
+//      gameMode{idle},
+//      score{0},
+//      winTracker{name} {
+//}
+
+MineSweeper::MineSweeper(const std::string &name) :
+        playerName{name},
+        gameRunning{false},
+        board{},
+        gameMode{idle},
+        score{0},
+        winTracker{} {
+
 }
 
 void MineSweeper::startGame() {
@@ -83,10 +93,12 @@ void MineSweeper::printWelcome() {
     while (option != 1) {
         std::cout << "\nWhat would you like to do?" << std::endl;
         std::cout << "\t1 - Play Mine Sweeper" <<
-                     "\n\t2 - View previous game wins" << std::endl;
+                     "\n\t2 - View previous game wins" <<
+                     "\n\t3 - Quit " << std::endl;
+        std::cout << ">";
         std::cin >> option;
 
-        while (!std::cin && option < 1 && option > 2) {
+        while (!std::cin && option < 1 && option > 3) {
             std::cout << "Sorry that's not an option! Try again! \n>";
             std::cin.clear();
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -99,6 +111,9 @@ void MineSweeper::printWelcome() {
                 break;
             case 2:
                 winTracker.printAllWins();
+                break;
+            case 3:
+                exit(0);
                 break;
             default:
                 break;
@@ -165,7 +180,6 @@ bool MineSweeper::setGameMode(int input) {
         default:
             return false;
     }
-//    std::cout << "\nNumber of Bombs: " << board.getNumberOfBombs() << std::endl;
     board.placeBombsOnBoard();
     return true;
 }
@@ -189,7 +203,7 @@ void MineSweeper::setPlayerPosition(int position) {
 
 int MineSweeper::calculateNumberForBoard(int position) {
     int bombsTouchingPosition{};
-    std::vector<int> positionsToCheck = board.getPositionSurroundings().at(position-1);
+    auto positionsToCheck = board.getPositionSurroundings().at(position-1);
 
     for (int i = 0; i < board.getBombPositions().size(); i++) {
         for (int j = 0; j < positionsToCheck.size(); j++) {
@@ -197,10 +211,7 @@ int MineSweeper::calculateNumberForBoard(int position) {
                 bombsTouchingPosition++;
         }
     }
-//    std::cout << "\nBombs Touching position: " << bombsTouchingPosition << "\n" << std::endl;
     return bombsTouchingPosition;
-
-    return 1; // Temporarily return 1
 }
 
 /**
@@ -318,10 +329,10 @@ void MineSweeper::handlePlayerMove(int row, int col) {
  * This function is called if the player has won the game and prints out a message.
  */
 void MineSweeper::handleWin() {
-    std::cout << green << "\nCongratulations You Win " << playerName << "!!!" << white << std::endl;
+    std::cout << green << "\nCongratulations!! You Win " << playerName << "!!!" << white << std::endl;
     std::cout << "Score: " << score << std::endl;
 
-    std::cout << "\nHere were the bomb positions:" << std::endl;
+    std::cout << "\nThese were the bomb positions:" << std::endl;
     board.revealBoardWhenGameOver();
     updatePlayerWins();
     this->gameRunning = false;
@@ -375,9 +386,11 @@ void MineSweeper::printInstructions() {
                 "  there was a bomb in that position or not." << std::endl;
     std::cout << green << "-" << white " If the position you reveal contains a number, these means that there are that many bombs touching that position. For example, \n"
                  "  if you reveal a 3, this tells you that there are currently 3 bombs touching that position and can be anywhere in the eight \n"
-                 "  positions (three if it's a corner, five if it's a side, eight otherwise) around the position you opened." << std::endl;
+                 "  positions (" << underline << "three" << removeUnderline " if it's a corner, " << underline <<  "five" << removeUnderline << " if it's a side, " << underline << "eight" << removeUnderline << " otherwise) around "\
+                 "the position you opened." << std::endl;
     std::cout << green << "-" << white " You must use the numbers you reveal to your advantage to navigate your way around the board." << std::endl;
-    std::cout << green << "-" << white " If you reveal a bomb (" << red << "X" << white "), the game is over!\n" << std::endl;
+    std::cout << green << "-" << white " If you reveal a bomb (" << red << "X" << white "), the game is over!" << std::endl;
+    std::cout << green << "- Good Luck!\n" << white << std::endl;
 
     board.printGameBoard();
 }
