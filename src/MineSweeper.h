@@ -21,7 +21,7 @@ private:
     WinTracker winTracker;
 
 public:
-    explicit MineSweeper(const std::string &name);
+    explicit MineSweeper(const std::string& name);
     void startGame();
     void resetGame();
 

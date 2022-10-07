@@ -64,6 +64,7 @@ void GameBoard::placeBombsOnBoard() {
     }
 
     // ---- For testing ----
+    // Displays all the bomb positions
     for(int i = 1; i <= 36; i++) {
         if (std::find(bombPositions.begin(), bombPositions.end(), i) != bombPositions.end()) {
 
@@ -253,7 +254,7 @@ std::vector<int> GameBoard::getBombPositions() const {
 /**
  * @return The vector that holds each positions surroundings.
  */
-std::vector<std::vector<int>> GameBoard::getPositionSurroundings() const {
+std::array<std::vector<int>, 36> GameBoard::getPositionSurroundings() const {
     return positionSurroundings;
 }
 

@@ -7,6 +7,7 @@
 
 #include <string>
 #include <vector>
+#include <array>
 
 class GameBoard {
 private:
@@ -57,7 +58,7 @@ private:
     std::vector<int> thirtyFiveSurroundings {28, 29, 30, 34, 36};
     std::vector<int> thirtySixSurroundings {29, 30, 35};
 
-    std::vector<std::vector<int>> positionSurroundings {
+    std::array<std::vector<int>, 36> positionSurroundings {
             oneSurroundings,
             twoSurroundings,
             threeSurroundings,
@@ -117,7 +118,7 @@ public:
     void updatePositionsOpened();
 
     std::vector<int> getBombPositions() const;
-    std::vector<std::vector<int>> getPositionSurroundings() const;
+    std::array<std::vector<int>, 36> getPositionSurroundings() const;
 };
 
 

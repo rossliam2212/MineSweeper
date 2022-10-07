@@ -7,7 +7,7 @@ set(SOURCE_FILES src/main.cpp
                  src/MineSweeper.h
                  src/WinTracker.cpp
                  src/WinTracker.h
-                 src/GameBoard.cpp 
+                 src/GameBoard.cpp
                  src/GameBoard.h)
 
 add_executable(MineSweeper ${SOURCE_FILES})
